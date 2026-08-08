@@ -1,20 +1,62 @@
-function [xk,fk,gradfk_norm,k,xseq, btseq] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax)
-%Implementation of the Newton method with backtracking for optimization
+function [xk,fk,gradfk_norm,k,xseq, btseq, flag_multi] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta, jmax)
+%Implementation of the modified Newton method with backtracking for optimization
 
 
 k = 0;
 xk =x0;
+n = length(x0); %dimension
 gradfk_norm = norm(gradf(xk));
 btseq = zeros(kmax,1);
 xseq = zeros(length(x0), kmax); %storing the sequence
+flag_multi = 0; %everything works
 
 while(gradfk_norm >= tolgrad && k < kmax)
     bt = 0;
-    %new descent direction
-    pk = pcg(Hessf(xk), - gradf(xk)); %solution of linear system with conj grad method, assuming hessian is symm and pos def 
 
-    %check if pk is descent direction
+    % finding Bk
+
+    H = Hessf(xk);
+    d = diag(H);
+    
+    tauk = 0;
+
+    if (any(d<=0))
+        tauk = beta - min(d);
+    end
+    
+    for j = 0:jmax
+        [R ,  flag] = chol(H + (tauk*eye(n)) ); %try to compute choleski decomposition
+        if flag ==0 %symmetric positive definite
+            break
+        else
+            tauk = max(2*tauk, beta);
+        end
+
+
+
+    end
+
+    if (j == jmax && flag ~=0)
+        flag_multi = 1; %not pos def
+        break
+    end
+
+
+
+
+
+    %Bk = H + (tauk*eye(n));
+
+
+ 
+    %new descent direction
+
+    y = (R')\(-gradf(xk));
+    pk =  R \ y;
+
+    %check if pk is descent direction 
     if (pk'*gradf(xk)>0)
+        flag_multi = 2; %flag if not descent direction
         break
     end
 
@@ -22,13 +64,14 @@ while(gradfk_norm >= tolgrad && k < kmax)
     xnew = xk + alpha *pk;
 
     %backtracking
-    while (bt<=btmax && f(xnew)> f(xk)- c1*alpha*gradf(xk)'*gradf(xk) )
+    while (bt<=btmax && f(xnew)> f(xk) + c1*alpha*pk'*gradf(xk) )
         bt = bt+1;
         alpha = alpha*rho;
         xnew = xk + alpha *pk; 
     end
 
-    if (f(xnew)> f(xk)- c1*alpha*gradf(xk)'*gradf(xk)) %if the last step does not satisfy armijo I break everything (we should restart the method with different parameters)
+    if (f(xnew)> f(xk) + c1*alpha*pk'*gradf(xk)) %if the last step does not satisfy armijo I break everything (we should restart the method with different parameters)
+        flag_multi = 3; %flag if not Armijo
         break
     end 
 
@@ -39,7 +82,7 @@ while(gradfk_norm >= tolgrad && k < kmax)
     xseq(:, k) = xk;
 end
 fk = f(xk);
-%xseq = xseq(:, 1:k); %slice
+xseq = xseq(:, 1:k); %slice
 xseq = [x0, xseq]; %concatenation
 
 
