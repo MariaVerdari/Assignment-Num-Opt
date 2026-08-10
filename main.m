@@ -1,11 +1,10 @@
-% PROBLEM 5, MODIFIED NEWTON
+
+
 
 clear
 clc
 close all
 
-
-% load("test_nonlinsys.mat")
 
 
 % set random seed
@@ -13,108 +12,443 @@ close all
 rng(358655)
 
 
+
+
+% PROBLEM 5, MODIFIED NEWTON AND TRUNCATED NEWTON
+
+disp("PROBLEM 5")
+
+
 % function, gradient and Hessian
 
 
 f = @(x) problem_5(x);
-gradf = @(x) get_gradient(x);
-Hessf = @(x) get_hessian(x);
+gradf = @(x) get_gradient_5(x);
+Hessf = @(x) get_hessian_5(x);
 
 
-function g = get_gradient(x)
+function g = get_gradient_5(x)
     [~, g] = problem_5(x);
 end
 
-function H = get_hessian(x)
+function H = get_hessian_5(x)
     [~, ~, H] = problem_5(x);
 end
 
 
 % fine tuned parameters
+% vedere se differenziare 
 
-kmax = 5000; %bo
+kmax = 1000; %bo 5000
 tolgrad =  1e-8; %bo
 c1 = 1e-4;
 rho = 0.8;
 btmax = 50;
 beta = 1e-3; % nelle note 
-jmax = 2000;
+jmax_M = 40; %bo
+jmax_T= 500; %bo
+
+eta =  @(x)  min(0.5, x); %quadratic
+%eta =  @(x)  min(0.5, sqrt(x)); %superlinear
+
+
+
 
 
 
 dims = [2, 1e3, 1e4, 1e5];
 
+% warmup
+x_warmup = -ones(2,1);
+modified_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta, jmax_M);
+truncated_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax_T, eta);
+
+
+
 for n = dims
-    start_points = [- ones(n,1), unifrnd(-2, 0, n), unifrnd(-2, 0, n), unifrnd(-2, 0, n), unifrnd(-2, 0, n), unifrnd(-2, 0, n)]; % deignated starting point and 5 randomly generated
+    disp(n)
+    start_points = [- ones(n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1)]; % deignated starting point and 5 randomly generated
+    
+    if n == 2
+        xBigSeq_M = cell(length(start_points),1);
+        xBigSeq_T = cell(length(start_points),1);
+    end
 
+
+    num = 1;
     for x0 = start_points
+        
+        % MODIFIED
         tic
-        [xk,fk,gradfk_norm,k,xseq, btseq, flag_multi] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta, jmax);
-        time = toc;
+        [xk_M,fk_M,gradfk_norm_M,k_M,xseq_M, btseq_M, flag_multi_M] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta, jmax_M);
+        time_M = toc;
 
+        % TRUNCATED
+        tic
+        [xk_T,fk_T,gradfk_norm_T,k_T,xseq_T, btseq_T, flag_multi_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax_T, eta);
+        time_T = toc;
 
-        if k >= 3
-            x_k   = xseq(:, end);
-            x_k1  = xseq(:, end-1); 
-            x_k2  = xseq(:, end-2); 
-            x_k3  = xseq(:, end-3); 
+        if n==2
+            xBigSeq_M{num} = xseq_M;
+            xBigSeq_T{num} = xseq_T;
+        end
+
+        
+
+        % EXPERIMENTAL RATE MODIFIED
+        if k_M >= 3
+            x_k   = xseq_M(:, 4);
+            x_k1  = xseq_M(:, 3); 
+            x_k2  = xseq_M(:, 2); 
+            x_k3  = xseq_M(:, 1); 
             
             e_k   = norm(x_k - x_k1);
             e_k1  = norm(x_k1 - x_k2);
             e_k2  = norm(x_k2 - x_k3);
             
             % experimental rate
-            rate_exp = log((e_k + eps) / (e_k1 + eps)) / log((e_k1 + eps) / (e_k2 + eps));
+            rate_exp_M = log((e_k + eps) / (e_k1 + eps)) / log((e_k1 + eps) / (e_k2 + eps));
         else
-            rate_exp = Nan;
+            rate_exp_M = NaN;
+        end
 
+
+
+         % EXPERIMENTAL RATE TRUNCATED
+        if k_T >= 3
+            x_k   = xseq_T(:, 4);
+            x_k1  = xseq_T(:, 3); 
+            x_k2  = xseq_T(:, 2); 
+            x_k3  = xseq_T(:, 1); 
+            
+            e_k   = norm(x_k - x_k1);
+            e_k1  = norm(x_k1 - x_k2);
+            e_k2  = norm(x_k2 - x_k3);
+            
+            % experimental rate
+            rate_exp_T = log((e_k + eps) / (e_k1 + eps)) / log((e_k1 + eps) / (e_k2 + eps));
+        else
+            rate_exp_T = NaN;
         end
             
 
-        print("Starting point:", x0, "Grad norm:",gradfk_norm, "Iters/max iters:", k, "Flag:", flag_multi, "Rate of convergence:",rate_exp ,"Time:", time)
-        print()
+        % MODIFIED
+        fprintf('  Modified  | Pt %d | Grad norm: %.2e | Iters: %d/%d | Flag: %d | Rate: %.2f | Time: %.4fs\n', ...
+                num, gradfk_norm_M, k_M, kmax, flag_multi_M, rate_exp_M, time_M);
+
+        % TRUNCATED
+        fprintf('  Truncated | Pt %d | Grad norm: %.2e | Iters: %d/%d | Flag: %d | Rate: %.2f | Time: %.4fs\n\n', ...
+                num, gradfk_norm_T, k_T, kmax, flag_multi_T, rate_exp_T, time_T);
+
+        
+
+        num = num+1;
     end
+
+    fprintf('\n');
 
 end
 
-%%
+% figures
+
+
+% TOP VIEW MODIFIED
+figure;
+[X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
+Z = zeros(size(X));
+
+for i = 1:size(X, 1)
+    for j = 1:size(X, 2)
+        Z(i,j) = f([X(i,j); Y(i,j)]); 
+    end
+end
+
+
+% better levels
+z_min = min(Z(:)); 
+z_max = max(Z(:));
+levels = logspace(log10(z_min + 0.1), log10(z_max), 80) - 0.1; 
+
+contour(X, Y, Z, levels); 
+hold on;
+
+plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), 'r.-', 'DisplayName', 'Start 1');
+plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), 'b.-', 'DisplayName', 'Start 2');
+plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), 'g.-', 'DisplayName', 'Start 3');
+plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), 'm.-', 'DisplayName', 'Start 4');
+plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:),'c.-', 'DisplayName', 'Start 5');
+plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), 'k.-', 'DisplayName', 'Start 6');
+
+title('Top view of the function and sequence paths modified 5) (n=2)');
+xlabel('x_1');
+ylabel('x_2');
+legend('show');
+xlim([-2.5,1]);
+ylim([-2.5, 0.5]);
+
+
+
+
+% TOP VIEW TRUNCATED
+figure;
+[X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
+Z = zeros(size(X));
+
+for i = 1:size(X, 1)
+    for j = 1:size(X, 2)
+        Z(i,j) = f([X(i,j); Y(i,j)]); 
+    end
+end
+
+% better levels
+z_min = min(Z(:)); 
+z_max = max(Z(:));
+levels = logspace(log10(z_min + 0.1), log10(z_max), 80) - 0.1; 
+
+contour(X, Y, Z, levels); 
+hold on;
+
+
+plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), 'r.-', 'DisplayName', 'Start 1');
+plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), 'b.-', 'DisplayName', 'Start 2');
+plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), 'g.-', 'DisplayName', 'Start 3');
+plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), 'm.-', 'DisplayName', 'Start 4');
+plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:),'c.-', 'DisplayName', 'Start 5');
+plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), 'k.-', 'DisplayName', 'Start 6');
+
+title('Top view of the function and sequence paths (truncated 5) (n=2)');
+xlabel('x_1');
+ylabel('x_2');
+legend('show');
+xlim([-2.5,1]);
+ylim([-2.5, 0.5]);
+
+
+
+figure;
+% Usiamo semilogy perché l'errore decade esponenzialmente
+% Assumiamo che tu abbia un vettore con la norma del gradiente o l'errore per ogni iterazione
+% Se non lo hai, puoi usare la distanza tra i punti in xseq1, xseq2, ecc.
+
+semilogy(1:length(grad_hist1), grad_hist1, 'r.-', 'DisplayName', 'Start 1');
+hold on;
+semilogy(1:length(grad_hist2), grad_hist2, 'b.-', 'DisplayName', 'Start 2');
+semilogy(1:length(grad_hist3), grad_hist3, 'g.-', 'DisplayName', 'Start 3');
+semilogy(1:length(grad_hist4), grad_hist4, 'm.-', 'DisplayName', 'Start 4');
+
+title('Experimental Rates of Convergence (Gradient Norm vs Iters)');
+xlabel('Iterations (k)');
+ylabel('||\nabla f(x_k)|| (Log Scale)');
+grid on;
+legend('show');
+
+
+
+
+
+% PROBLEM 12, MODIFIED NEWTON AND TRUNCATED NEWTON
+
+disp("PROBLEM 12")
+
+
+% function, gradient and Hessian
+
+
+f = @(x) problem_12(x);
+gradf = @(x) get_gradient_12(x);
+Hessf = @(x) get_hessian_12(x);
+
+
+function g = get_gradient_12(x)
+    [~, g] = problem_12(x);
+end
+
+function H = get_hessian_12(x)
+    [~, ~, H] = problem_12(x);
+end
+
+
+% fine tuned parameters
+% vedere se differenziare 
+
+kmax = 1000; %bo 5000
+tolgrad =  1e-8; %bo
+c1 = 1e-4;
+rho = 0.8;
+btmax = 50;
+beta = 1e-3; % nelle note 
+jmax_M = 40; %bo
+jmax_T= 500; %bo
+
+eta =  @(x)  min(0.5, x); %quadratic
+%eta =  @(x)  min(0.5, sqrt(x)); %superlinear
+
+
+
+
+
+dims = [2, 1e3, 1e4, 1e5];
+
+% warmup
+x_warmup = -ones(2,1);
+modified_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta, jmax_M);
+truncated_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax_T, eta);
+
+
+
+for n = dims
+    disp(n)
+
+    xs = zeros(n, 1);
+    xs(2:2:n) = -1; % -1 on even indexes
+    start_points = [xs, xs + unifrnd(-1, 1, n,1), xs + unifrnd(-1, 1, n,1), xs + unifrnd(-1, 1, n,1), xs + unifrnd(-1, 1, n,1), xs + unifrnd(-1, 1, n,1)]; % designated starting point and 5 randomly generated
+
+    
+    if n == 2
+        xBigSeq_M = cell(length(start_points),1);
+        xBigSeq_T = cell(length(start_points),1);
+    end
+
+    num = 1;
+    for x0 = start_points
+        
+        % MODIFIED
+        tic
+        [xk_M,fk_M,gradfk_norm_M,k_M,xseq_M, btseq_M, flag_multi_M] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta, jmax_M);
+        time_M = toc;
+
+        % TRUNCATED
+        tic
+        [xk_T,fk_T,gradfk_norm_T,k_T,xseq_T, btseq_T, flag_multi_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax_T, eta);
+        time_T = toc;
+
+
+        if n==2
+            xBigSeq_M{num} = xseq_M;
+            xBigSeq_T{num} = xseq_T;
+        end
+
+
+        
+
+        % EXPERIMENTAL RATE MODIFIED
+        if k_M >= 3
+            x_k   = xseq_M(:, end);
+            x_k1  = xseq_M(:, end-1); 
+            x_k2  = xseq_M(:, end-2); 
+            x_k3  = xseq_M(:, end-3); 
+            
+            e_k   = norm(x_k - x_k1);
+            e_k1  = norm(x_k1 - x_k2);
+            e_k2  = norm(x_k2 - x_k3);
+            
+            % experimental rate
+            rate_exp_M = log((e_k + eps) / (e_k1 + eps)) / log((e_k1 + eps) / (e_k2 + eps));
+        else
+            rate_exp_M = NaN;
+        end
+
+
+
+         % EXPERIMENTAL RATE TRUNCATED
+        if k_T >= 3
+            x_k   = xseq_T(:, end);
+            x_k1  = xseq_T(:, end-1); 
+            x_k2  = xseq_T(:, end-2); 
+            x_k3  = xseq_T(:, end-3); 
+            
+            e_k   = norm(x_k - x_k1);
+            e_k1  = norm(x_k1 - x_k2);
+            e_k2  = norm(x_k2 - x_k3);
+            
+            % experimental rate
+            rate_exp_T = log((e_k + eps) / (e_k1 + eps)) / log((e_k1 + eps) / (e_k2 + eps));
+        else
+            rate_exp_T = NaN;
+        end
+            
+
+        % MODIFIED
+        fprintf('  Modified  | Pt %d | Grad norm: %.2e | Iters: %d/%d | Flag: %d | Rate: %.2f | Time: %.4fs\n', ...
+                num, gradfk_norm_M, k_M, kmax, flag_multi_M, rate_exp_M, time_M);
+
+        % TRUNCATED
+        fprintf('  Truncated | Pt %d | Grad norm: %.2e | Iters: %d/%d | Flag: %d | Rate: %.2f | Time: %.4fs\n\n', ...
+                num, gradfk_norm_T, k_T, kmax, flag_multi_T, rate_exp_T, time_T);
+
+        
+
+        num = num+1;
+    end
+
+    fprintf('\n');
+
+end
+
+
+
+
+
 
 %figures
 
 
-  figure
-     [X,Y] = meshgrid(linspace(-6,2,500), linspace(-3,5,500));
-    
-    Z1 = zeros(500,500);
-    Z2 = zeros(500,500);
+% TOP VIEW MODIFIED
+figure;
+[X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
+Z = zeros(size(X));
 
-    for i = 1:500
-        for j = 1:500
-            Z1(i,j) = f1([X(1,i); Y(j,1)]);
-            Z2(i,j) = f2([X(1,i); Y(j,1)]);
-
-        end
+for i = 1:size(X, 1)
+    for j = 1:size(X, 2)
+        Z(i,j) = f([X(i,j); Y(i,j)]); 
     end
-    contour(X, Y, Z1)
-hold on
-    contour(X, Y, Z2)
-    plot(xseq1(1,:),xseq1(2, :), col = 'red' )
-    plot(xseq2(1, :),xseq2(2, :), col = 'blue' )
-    plot(xseq3(1,:),xseq1(2, :), col = 'red' )
-    plot(xseq4(1, :),xseq2(2, :), col = 'blue' )
+end
+
+contour(X, Y, Z, 50); % 50 level curves
+hold on;
+
+plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), 'r.-', 'DisplayName', 'Start 1');
+plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), 'b.-', 'DisplayName', 'Start 2');
+plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), 'g.-', 'DisplayName', 'Start 3');
+plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), 'm.-', 'DisplayName', 'Start 4');
+plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:),'c.-', 'DisplayName', 'Start 5');
+plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), 'k.-', 'DisplayName', 'Start 6');
+
+title('Top view of the function and sequence paths (modified, 12) (n=2)');
+xlabel('x_1');
+ylabel('x_2');
+legend('show');
 
 
 
-    figure
-   
-    surf(X,Y,Z1,'FaceAlpha',0.5,'EdgeColor','none') 
+% TOP VIEW TRUNCATED
+figure;
+[X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
+Z = zeros(size(X));
 
-    hold on
+for i = 1:size(X, 1)
+    for j = 1:size(X, 2)
+        Z(i,j) = f([X(i,j); Y(i,j)]); 
+    end
+end
 
-    surf(X,Y,Z2,'FaceAlpha',0.5,'EdgeColor','none') 
+contour(X, Y, Z, 50); % 50 level curves
+hold on;
 
-    plot3(xseq1(1,:), xseq1(2,:), f1([xseq1(1,:); xseq1(2,:)]),col = 'red')
-    plot3(xseq2(1,:), xseq2(2,:), f1([xseq2(1,:); xseq2(2,:)]),col = 'blue')
+plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), 'r.-', 'DisplayName', 'Start 1');
+plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), 'b.-', 'DisplayName', 'Start 2');
+plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), 'g.-', 'DisplayName', 'Start 3');
+plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), 'm.-', 'DisplayName', 'Start 4');
+plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:),'c.-', 'DisplayName', 'Start 5');
+plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), 'k.-', 'DisplayName', 'Start 6');
+
+title('Top view of the function and sequence paths (truncated, 12) (n=2)');
+xlabel('x_1');
+ylabel('x_2');
+legend('show');
+
+
+
 
 
  %% es 9.4
