@@ -256,20 +256,38 @@ for i = 1:size(X, 1)
     end
 end
 
-contour(X, Y, Z, 50); % 50 level curves
+% better levels
+z_min = min(Z(:)); 
+z_max = max(Z(:));
+levels = logspace(log10(z_min + 0.1), log10(z_max), 80) - 0.1; 
+
+contour(X, Y, Z, levels, 'LineColor', [0.7 0.7 0.7]); 
 hold on;
 
-plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), 'r.-', 'DisplayName', 'Start 1');
-plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), 'b.-', 'DisplayName', 'Start 2');
-plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), 'g.-', 'DisplayName', 'Start 3');
-plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), 'm.-', 'DisplayName', 'Start 4');
-plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:),'c.-', 'DisplayName', 'Start 5');
-plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), 'k.-', 'DisplayName', 'Start 6');
+c1 = [0.000, 0.447, 0.741]; 
+c2 = [0.850, 0.325, 0.098]; 
+c3 = [0.466, 0.674, 0.188]; 
+c4 = [0.494, 0.184, 0.556]; 
+c5 = [0.929, 0.694, 0.125]; 
+c6 = [0.850, 0.000, 0.150];
 
-title('Top view of the function and sequence paths (modified, 16) (n=2)');
+lw = 1.5; 
+ms = 12;  
+
+plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
+plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
+plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
+plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
+plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
+
+title('Top view of the function and sequence paths (Modified 16) (n=2)');
 xlabel('x_1');
 ylabel('x_2');
 legend('show');
+xlim([-2.5, 1]);
+ylim([-2.5, 0.5]);
+
 
 
 
@@ -284,17 +302,48 @@ for i = 1:size(X, 1)
     end
 end
 
-contour(X, Y, Z, 50); % 50 level curves
+
+% better levels
+z_min = min(Z(:)); 
+z_max = max(Z(:));
+levels = logspace(log10(z_min + 0.1), log10(z_max), 80) - 0.1; 
+
+contour(X, Y, Z, levels, 'LineColor', [0.7 0.7 0.7]); 
 hold on;
 
-plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), 'r.-', 'DisplayName', 'Start 1');
-plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), 'b.-', 'DisplayName', 'Start 2');
-plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), 'g.-', 'DisplayName', 'Start 3');
-plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), 'm.-', 'DisplayName', 'Start 4');
-plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:),'c.-', 'DisplayName', 'Start 5');
-plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), 'k.-', 'DisplayName', 'Start 6');
+c1 = [0.000, 0.447, 0.741]; 
+c2 = [0.850, 0.325, 0.098]; 
+c3 = [0.466, 0.674, 0.188]; 
+c4 = [0.494, 0.184, 0.556]; 
+c5 = [0.929, 0.694, 0.125]; 
+c6 = [0.850, 0.000, 0.150];
 
-title('Top view of the function and sequence paths (truncated, 16) (n=2)');
+lw = 1.5; 
+ms = 12;  
+
+plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
+plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
+plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
+plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
+plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
+
+
+
+
+title('Top view of the function and sequence paths (truncated 16) (n=2)');
 xlabel('x_1');
 ylabel('x_2');
 legend('show');
+xlim([-2.5,1]);
+ylim([-2.5, 0.5]);
+
+
+
+
+
+
+
+ 
+
+
