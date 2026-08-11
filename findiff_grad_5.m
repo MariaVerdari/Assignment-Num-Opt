@@ -9,6 +9,10 @@ function [gradfx] = findiff_grad_5(x, h, type)
     x_prev = [0; x(1:n-1)];
     x_next = [x(2:n); 0];
     f_base = (3 - 2*x).*x - x_prev - x_next + 1;
+    
+    if isscalar(h)
+        h = h * ones(n, 1);
+    end
 
     switch type
         case 'fw'
@@ -17,8 +21,9 @@ function [gradfx] = findiff_grad_5(x, h, type)
                 
                 F_base_local = sum(abs(f_base(idx)).^p);
                 
+                hk = h(k);
                 xh = x;
-                xh(k) = xh(k) + h;
+                xh(k) = xh(k) + hk;
                 
                 F_fw_local = 0;
                 for i = idx
@@ -30,15 +35,16 @@ function [gradfx] = findiff_grad_5(x, h, type)
                     F_fw_local = F_fw_local + abs(fi_fw)^p;
                 end
                 
-                gradfx(k) = (F_fw_local - F_base_local) / h;
+                gradfx(k) = (F_fw_local - F_base_local) / hk;
             end
             
         case 'c'
             for k = 1:n
                 idx = max(1, k-1) : min(n, k+1);
                 
-                xh_plus = x;  xh_plus(k) = xh_plus(k) + h;
-                xh_minus = x; xh_minus(k) = xh_minus(k) - h;
+                hk = h(k);
+                xh_plus = x;  xh_plus(k) = xh_plus(k) + hk;
+                xh_minus = x; xh_minus(k) = xh_minus(k) - hk;
                 
                 F_fw_local = 0;
                 F_bw_local = 0;
@@ -59,7 +65,7 @@ function [gradfx] = findiff_grad_5(x, h, type)
                     F_bw_local = F_bw_local + abs(fi_bw)^p;
                 end
                 
-                gradfx(k) = (F_fw_local - F_bw_local) / (2 * h);
+                gradfx(k) = (F_fw_local - F_bw_local) / (2 * hk);
             end
             
         otherwise

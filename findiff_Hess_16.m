@@ -6,11 +6,19 @@ function [Hessfx] = findiff_Hess_16(x, h)
     
     Hessfx = sparse(n, n);
     
+    if isscalar(h)
+        h = h * ones(n, 1);
+    end
+
     for k = 1:n
         xk = x(k);
-        xk_plus  = xk + h;
-        xk_minus = xk - h;
         
+        hk = h(k); 
+        
+        xk_plus  = xk + hk;
+        xk_minus = xk - hk;
+        
+
         if k < n
             f_base  = k * (1 - cos(xk)) + 2 * sin(xk);
             f_plus  = k * (1 - cos(xk_plus)) + 2 * sin(xk_plus);
@@ -21,6 +29,6 @@ function [Hessfx] = findiff_Hess_16(x, h)
             f_minus = n * (1 - cos(xk_minus)) - (n - 1) * sin(xk_minus);
         end
         
-        Hessfx(k, k) = (f_plus - 2*f_base + f_minus) / (h^2);
+        Hessfx(k, k) = (f_plus - 2*f_base + f_minus) / (hk^2);
     end
 end

@@ -5,12 +5,17 @@ function [gradfx] = findiff_grad_16(x, h, type)
     x = x(:);
     n = length(x);
     gradfx = zeros(size(x));
+    
+    if isscalar(h)
+        h = h * ones(n, 1);
+    end
 
     switch type
         case 'fw'
             for k = 1:n
+                hk = h(k);
                 xk = x(k);
-                xk_h = x(k) + h;
+                xk_h = x(k) + hk;
                 
                 if k < n
                     f_base = k * (1 - cos(xk)) + 2 * sin(xk);
@@ -20,13 +25,14 @@ function [gradfx] = findiff_grad_16(x, h, type)
                     f_fw   = n * (1 - cos(xk_h)) - (n - 1) * sin(xk_h);
                 end
                 
-                gradfx(k) = (f_fw - f_base) / h;
+                gradfx(k) = (f_fw - f_base) / hk;
             end
             
         case 'c'
             for k = 1:n
-                xk_plus  = x(k) + h;
-                xk_minus = x(k) - h;
+                hk = h(k);
+                xk_plus  = x(k) + hk;
+                xk_minus = x(k) - hk;
                 
                 if k < n
                     f_plus  = k * (1 - cos(xk_plus)) + 2 * sin(xk_plus);
@@ -36,7 +42,7 @@ function [gradfx] = findiff_grad_16(x, h, type)
                     f_minus = n * (1 - cos(xk_minus)) - (n - 1) * sin(xk_minus);
                 end
                 
-                gradfx(k) = (f_plus - f_minus) / (2 * h);
+                gradfx(k) = (f_plus - f_minus) / (2 * hk);
             end
             
         otherwise

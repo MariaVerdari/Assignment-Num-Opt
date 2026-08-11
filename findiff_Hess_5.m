@@ -6,7 +6,10 @@ function [Hessfx] = findiff_Hess_5(x, h)
     p = 7/3;
     
     Hessfx = sparse(n, n);
-    
+    if isscalar(h)
+        h = h * ones(n, 1);
+    end
+
     function val = F_local(xt, indices)
         val = 0;
         for m = indices
@@ -21,28 +24,30 @@ function [Hessfx] = findiff_Hess_5(x, h)
     for j = 1:n
         idx_diag = max(1, j-1) : min(n, j+1);
         
-        xh_plus = x;  xh_plus(j) = xh_plus(j) + h;
-        xh_minus = x; xh_minus(j) = xh_minus(j) - h;
+        hj = h(j);
+        xh_plus = x;  xh_plus(j) = xh_plus(j) + hj;
+        xh_minus = x; xh_minus(j) = xh_minus(j) - hj;
         
         F_base  = F_local(x, idx_diag);
         F_plus  = F_local(xh_plus, idx_diag);
         F_minus = F_local(xh_minus, idx_diag);
         
-        Hessfx(j,j) = (F_plus - 2*F_base + F_minus) / (h^2);
+        Hessfx(j,j) = (F_plus - 2*F_base + F_minus) / (hj^2);
         
         for i = j+1 : min(n, j+2)
             idx_off = max(1, j-1) : min(n, i+1);
             
-            xh_ij = x; xh_ij(i) = xh_ij(i) + h; xh_ij(j) = xh_ij(j) + h;
-            xh_i  = x; xh_i(i)  = xh_i(i) + h;
-            xh_j  = x; xh_j(j)  = xh_j(j) + h;
+            hi = h(i);
+            xh_ij = x; xh_ij(i) = xh_ij(i) + hi; xh_ij(j) = xh_ij(j) + hj;
+            xh_i  = x; xh_i(i)  = xh_i(i) + hi;
+            xh_j  = x; xh_j(j)  = xh_j(j) + hj;
             
             F_base_off = F_local(x, idx_off);
             F_ij       = F_local(xh_ij, idx_off);
             F_i        = F_local(xh_i, idx_off);
             F_j        = F_local(xh_j, idx_off);
             
-            Hessfx(i,j) = (F_ij - F_i - F_j + F_base_off) / (h^2);
+            Hessfx(i,j) = (F_ij - F_i - F_j + F_base_off) / (hi*hj);
             
             Hessfx(j,i) = Hessfx(i,j);
         end
