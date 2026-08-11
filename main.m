@@ -224,48 +224,28 @@ xlim([-2.5,1]);
 ylim([-2.5, 0.5]);
 
 
+%%
 
-figure;
-% Usiamo semilogy perché l'errore decade esponenzialmente
-% Assumiamo che tu abbia un vettore con la norma del gradiente o l'errore per ogni iterazione
-% Se non lo hai, puoi usare la distanza tra i punti in xseq1, xseq2, ecc.
+% PROBLEM 16, MODIFIED NEWTON AND TRUNCATED NEWTON
 
-semilogy(1:length(grad_hist1), grad_hist1, 'r.-', 'DisplayName', 'Start 1');
-hold on;
-semilogy(1:length(grad_hist2), grad_hist2, 'b.-', 'DisplayName', 'Start 2');
-semilogy(1:length(grad_hist3), grad_hist3, 'g.-', 'DisplayName', 'Start 3');
-semilogy(1:length(grad_hist4), grad_hist4, 'm.-', 'DisplayName', 'Start 4');
-
-title('Experimental Rates of Convergence (Gradient Norm vs Iters)');
-xlabel('Iterations (k)');
-ylabel('||\nabla f(x_k)|| (Log Scale)');
-grid on;
-legend('show');
-
-
-
-
-
-% PROBLEM 12, MODIFIED NEWTON AND TRUNCATED NEWTON
-
-disp("PROBLEM 12")
+disp("PROBLEM 16")
 
 
 % function, gradient and Hessian
 
 
-f = @(x) problem_12(x);
-gradf = @(x) get_gradient_12(x);
-Hessf = @(x) get_hessian_12(x);
+f = @(x) problem_16(x);
+gradf = @(x) get_gradient_16(x);
+Hessf = @(x) get_hessian_16(x);
 
-
-function g = get_gradient_12(x)
-    [~, g] = problem_12(x);
+function g = get_gradient_16(x)
+    [~, g] = problem_16(x);
+end
+function H = get_hessian_16(x)
+    [~, ~, H] = problem_16(x);
 end
 
-function H = get_hessian_12(x)
-    [~, ~, H] = problem_12(x);
-end
+
 
 
 % fine tuned parameters
@@ -276,7 +256,8 @@ tolgrad =  1e-8; %bo
 c1 = 1e-4;
 rho = 0.8;
 btmax = 50;
-beta = 1e-3; % nelle note 
+%beta = 1e-3; % nelle note 
+beta = 0.5;
 jmax_M = 40; %bo
 jmax_T= 500; %bo
 
@@ -299,9 +280,7 @@ truncated_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jma
 for n = dims
     disp(n)
 
-    xs = zeros(n, 1);
-    xs(2:2:n) = -1; % -1 on even indexes
-    start_points = [xs, xs + unifrnd(-1, 1, n,1), xs + unifrnd(-1, 1, n,1), xs + unifrnd(-1, 1, n,1), xs + unifrnd(-1, 1, n,1), xs + unifrnd(-1, 1, n,1)]; % designated starting point and 5 randomly generated
+    start_points = [ones(n,1), unifrnd(0, 2, n,1), unifrnd(0, 2, n,1), unifrnd(0, 2, n,1), unifrnd(0, 2, n,1), unifrnd(0, 2, n,1)]; % deignated starting point and 5 randomly generated
 
     
     if n == 2
@@ -414,7 +393,7 @@ plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), 'm.-', 'DisplayName', 'Start 4');
 plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:),'c.-', 'DisplayName', 'Start 5');
 plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), 'k.-', 'DisplayName', 'Start 6');
 
-title('Top view of the function and sequence paths (modified, 12) (n=2)');
+title('Top view of the function and sequence paths (modified, 16) (n=2)');
 xlabel('x_1');
 ylabel('x_2');
 legend('show');
@@ -442,7 +421,7 @@ plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), 'm.-', 'DisplayName', 'Start 4');
 plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:),'c.-', 'DisplayName', 'Start 5');
 plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), 'k.-', 'DisplayName', 'Start 6');
 
-title('Top view of the function and sequence paths (truncated, 12) (n=2)');
+title('Top view of the function and sequence paths (truncated, 16) (n=2)');
 xlabel('x_1');
 ylabel('x_2');
 legend('show');

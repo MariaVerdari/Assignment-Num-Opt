@@ -1,18 +1,15 @@
-function [xk,fk,gradfk_norm_vec,k,xseq, btseq, flag_multi, err_seq] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax, eta)
+function [xk,fk,gradfk_norm_vec,k,xseq, btseq, flag_multi] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax, eta)
 %Implementation of the truncated Newton method with backtracking for optimization
 
-%AGGIUNGERE FLAG SE ARRIVA A KMAX? 
 
 
 k = 0;
 xk =x0;
 n = length(x0); %dimension
-gradfk_norm_vec = zeros(kmax+1, 1);
+gradfk_norm_vec = zeros(kmax, 1);
 gradfk_norm_vec(1) = norm(gradf(xk));
-btseq = zeros(kmax+1,1);
+btseq = zeros(kmax,1);
 etak = eta(gradfk_norm_vec(1));
-err_seq = zeros(kmax,1);
-
 
 if (n==2)
     xseq = zeros(n, kmax); %storing all the sequence for the plot
@@ -85,7 +82,6 @@ while(gradfk_norm_vec(k+1) >= tolgrad && k < kmax)
     end 
 
     btseq(k+1)= bt;
-    err_seq(k+1)= norm(xnew-xk);
     xk = xnew; 
     k = k+1;
     gradfk_norm_vec(k+1) = norm(gradf(xk));
@@ -105,8 +101,6 @@ if n==2
     xseq = xseq(:,1:k); %slice
     xseq = [x0, xseq]; %concatenation
 end
-gradfk_norm_vec = gradfk_norm_vec(1:k+1); %slice
-err_seq = err_seq(1:k);
 
 
 end
