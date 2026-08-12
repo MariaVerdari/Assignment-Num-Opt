@@ -95,7 +95,7 @@ for h = h_vec
         
                 % TRUNCATED
                 tic
-                [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T, err_seq_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf_const_handle,kmax_special,tolgrad_special,c1, rho, btmax_special_T, jmax_T, eta);
+                [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T, err_seq_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf_const_handle,kmax_special,tolgrad_special,c1, rho, btmax, jmax_special_T, eta);
                 time_T = toc;
 
             else
@@ -377,7 +377,7 @@ for h = h_vec
         
                 % TRUNCATED
                 tic
-                [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T, err_seq_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf_var_handle,kmax_special,tolgrad_special,c1, rho, btmax_special_T, jmax_T, eta);
+                [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T, err_seq_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf_var_handle,kmax_special,tolgrad_special,c1, rho, btmax, jmax_special_T, eta);
                 time_T = toc;
             else
 
