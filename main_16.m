@@ -92,17 +92,17 @@ for n = dims
 
         if n == 1e5
             tic
-            [xk_M,fk_M,gradfk_norm_vec_M,k_M,xseq_M, btseq_M, flag_multi_M] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax_M,tolgrad_M_big,c1, rho_M, btmax_M, beta, jmax_M);
+            [xk_M,fk_M,gradfk_norm_vec_M,k_M,xseq_M, btseq_M, flag_multi_M,err_seq_M] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax_M,tolgrad_M_big,c1, rho_M, btmax_M, beta, jmax_M);
             time_M = toc;
         else
             tic
-            [xk_M,fk_M,gradfk_norm_vec_M,k_M,xseq_M, btseq_M, flag_multi_M] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax_M,tolgrad_M,c1, rho_M, btmax_M, beta, jmax_M);
+            [xk_M,fk_M,gradfk_norm_vec_M,k_M,xseq_M, btseq_M, flag_multi_M,err_seq_M] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax_M,tolgrad_M,c1, rho_M, btmax_M, beta, jmax_M);
             time_M = toc;
         end
 
         % TRUNCATED
         tic
-        [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax_T,tolgrad_T,c1, rho_T, btmax_T, jmax_T, eta);
+        [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T,err_seq_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax_T,tolgrad_T,c1, rho_T, btmax_T, jmax_T, eta);
         time_T = toc;
 
 
