@@ -156,7 +156,7 @@ for h = h_vec
         semilogy(0:length(gradBigSeq_M{5})-1, gradBigSeq_M{5}, 'c.-', 'DisplayName', 'Start 5');
         semilogy(0:length(gradBigSeq_M{6})-1, gradBigSeq_M{6}, 'k.-', 'DisplayName', 'Start 6');
         
-        title(sprintf('Experimental Convergence 5 - Modified Newton (n=%d)', n));
+        title(sprintf('Gradient norm, problem 5, Modified (n=%d)', n));
         xlabel('Iterations (k)');
         ylabel('||\nabla f(x_k)|| (Log Scale)');
         grid on;
@@ -176,7 +176,8 @@ for h = h_vec
         semilogy(0:length(gradBigSeq_T{5})-1, gradBigSeq_T{5}, 'c.-', 'DisplayName', 'Start 5');
         semilogy(0:length(gradBigSeq_T{6})-1, gradBigSeq_T{6}, 'k.-', 'DisplayName', 'Start 6');
         
-        title(sprintf('Experimental Convergence 5 - Truncated Newton (n=%d)', n));
+        title(sprintf('Gradient norm, problem 5, Truncated (n=%d)', n));
+
         xlabel('Iterations (k)');
         ylabel('||\nabla f(x_k)|| (Log Scale)');
         grid on;
@@ -196,7 +197,8 @@ for h = h_vec
         plot(0:length(rateBigSeq_M{5})-1, rateBigSeq_M{5}, 'c.-', 'DisplayName', 'Start 5');
         plot(0:length(rateBigSeq_M{6})-1, rateBigSeq_M{6}, 'k.-', 'DisplayName', 'Start 6');
         
-        title(sprintf('Progression of Experimental Rate - Modified Newton (n = %d)', n));
+        title(sprintf('Experimental Rate, problem 5, Modified (n = %d)', n));
+
         xlabel('Iterations (k)');
         ylabel('Experimental Rate (p_k)');
         ylim([0, 3]); 
@@ -213,7 +215,8 @@ for h = h_vec
         plot(0:length(rateBigSeq_T{5})-1, rateBigSeq_T{5}, 'c.-', 'DisplayName', 'Start 5');
         plot(0:length(rateBigSeq_T{6})-1, rateBigSeq_T{6}, 'k.-', 'DisplayName', 'Start 6');
         
-        title(sprintf('Progression of Experimental Rate - Truncated Newton (n = %d)', n));
+        title(sprintf('Experimental Rate, problem 5, Truncated (n = %d)', n));
+
         xlabel('Iterations (k)');
         ylabel('Experimental Rate (p_k)');
         ylim([0, 3]); 
@@ -261,7 +264,8 @@ for h = h_vec
     plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
     plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
     
-    title('Top view of the function and sequence paths (Modified Newton) (n=2)');
+    title('Top view of the function and sequence paths, problem 5, Modified (n=2)');
+
     xlabel('x_1');
     ylabel('x_2');
     legend('show');
@@ -311,7 +315,8 @@ for h = h_vec
     
     
     
-    title('Top view of the function and sequence paths (truncated 5) (n=2)');
+    title('Top view of the function and sequence paths, problem 5, Truncated (n=2)');
+
     xlabel('x_1');
     ylabel('x_2');
     legend('show');
@@ -417,7 +422,9 @@ for h = h_vec
         semilogy(0:length(gradBigSeq_M{5})-1, gradBigSeq_M{5}, 'c.-', 'DisplayName', 'Start 5');
         semilogy(0:length(gradBigSeq_M{6})-1, gradBigSeq_M{6}, 'k.-', 'DisplayName', 'Start 6');
         
-        title(sprintf('Experimental Convergence 5 - Modified Newton (n=%d)', n));
+        title(sprintf('Gradient norm, problem 5, Modified (n=%d)', n));
+
+        
         xlabel('Iterations (k)');
         ylabel('||\nabla f(x_k)|| (Log Scale)');
         grid on;
@@ -437,7 +444,8 @@ for h = h_vec
         semilogy(0:length(gradBigSeq_T{5})-1, gradBigSeq_T{5}, 'c.-', 'DisplayName', 'Start 5');
         semilogy(0:length(gradBigSeq_T{6})-1, gradBigSeq_T{6}, 'k.-', 'DisplayName', 'Start 6');
         
-        title(sprintf('Experimental Convergence 5 - Truncated Newton (n=%d)', n));
+        title(sprintf('Gradient norm, problem 5, Truncated (n=%d)', n));
+
         xlabel('Iterations (k)');
         ylabel('||\nabla f(x_k)|| (Log Scale)');
         grid on;
@@ -457,7 +465,8 @@ for h = h_vec
         plot(0:length(rateBigSeq_M{5})-1, rateBigSeq_M{5}, 'c.-', 'DisplayName', 'Start 5');
         plot(0:length(rateBigSeq_M{6})-1, rateBigSeq_M{6}, 'k.-', 'DisplayName', 'Start 6');
         
-        title(sprintf('Progression of Experimental Rate - Modified Newton (n = %d)', n));
+        title(sprintf('Experimental Rate, problem 5, Modified (n = %d)', n));
+
         xlabel('Iterations (k)');
         ylabel('Experimental Rate (p_k)');
         ylim([0, 3]); 
@@ -474,7 +483,8 @@ for h = h_vec
         plot(0:length(rateBigSeq_T{5})-1, rateBigSeq_T{5}, 'c.-', 'DisplayName', 'Start 5');
         plot(0:length(rateBigSeq_T{6})-1, rateBigSeq_T{6}, 'k.-', 'DisplayName', 'Start 6');
         
-        title(sprintf('Progression of Experimental Rate - Truncated Newton (n = %d)', n));
+        title(sprintf('Experimental Rate, problem 5, Truncated (n = %d)', n));
+
         xlabel('Iterations (k)');
         ylabel('Experimental Rate (p_k)');
         ylim([0, 3]); 
@@ -526,7 +536,8 @@ for h = h_vec
     plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
     plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
     
-    title('Top view of the function and sequence paths (Modified Newton) (n=2)');
+    title('Top view of the function and sequence paths, problem 5, Modified (n=2)');
+
     xlabel('x_1');
     ylabel('x_2');
     legend('show');
@@ -576,7 +587,8 @@ for h = h_vec
     
     
     
-    title('Top view of the function and sequence paths (truncated 5) (n=2)');
+    title('Top view of the function and sequence paths, problem 5, Truncated (n=2)');
+
     xlabel('x_1');
     ylabel('x_2');
     legend('show');
