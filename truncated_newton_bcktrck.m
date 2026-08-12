@@ -1,7 +1,6 @@
 function [xk,fk,gradfk_norm_vec,k,xseq, btseq, flag_multi, err_seq] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax, eta)
 %Implementation of the truncated Newton method with backtracking for optimization
 
-%AGGIUNGERE FLAG SE ARRIVA A KMAX? 
 
 
 k = 0;
@@ -107,6 +106,12 @@ if n==2
 end
 gradfk_norm_vec = gradfk_norm_vec(1:k+1); %slice
 err_seq = err_seq(1:k);
+
+
+if (gradfk_norm_vec(end) >= tolgrad && flag_multi ==0)
+    flag_multi= 4; % no convergence
+
+end
 
 
 end

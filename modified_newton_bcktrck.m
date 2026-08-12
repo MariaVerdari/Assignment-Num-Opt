@@ -1,7 +1,6 @@
 function [xk,fk,gradfk_norm_vec,k,xseq, btseq, flag_multi, err_seq] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta, jmax)
 %Implementation of the modified Newton method with backtracking for optimization
 
-%AGGIUNGERE FLAG SE ARRIVA A KMAX? 
 %AGGIUNGERE PRINT ALPHA E TAU
 
 k = 0;
@@ -48,7 +47,7 @@ while(gradfk_norm_vec(k+1) >= tolgrad && k < kmax)
     end
 
     if (j == jmax && flag ~=0)
-        flag_multi = 1; %not pos def
+        flag_multi = 3; %not pos def
         break
     end
 
@@ -67,7 +66,7 @@ while(gradfk_norm_vec(k+1) >= tolgrad && k < kmax)
 
     %check if pk is descent direction 
     if (pk'*gradf(xk)>0)
-        flag_multi = 2; %flag if not descent direction
+        flag_multi = 1; %flag if not descent direction
         break
     end
 
@@ -82,7 +81,7 @@ while(gradfk_norm_vec(k+1) >= tolgrad && k < kmax)
     end
 
     if (f(xnew)> f(xk) + c1*alpha*pk'*gradf(xk)) %if the last step does not satisfy armijo I break everything (we should restart the method with different parameters)
-        flag_multi = 3; %flag if not Armijo
+        flag_multi = 2; %flag if not Armijo
         break
     end 
 
@@ -109,5 +108,8 @@ end
 gradfk_norm_vec = gradfk_norm_vec(1:k+1); %slice
 err_seq = err_seq(1:k);
 
+if (gradfk_norm_vec(end) >= tolgrad && flag_multi ==0)
+    flag_multi= 4; % no convergence
+end
 
 end
