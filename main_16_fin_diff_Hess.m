@@ -67,7 +67,9 @@ truncated_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax_T,tolgrad_T,c1, rho_T, btma
 
 h_vec=[1e-4, 1e-8, 1e-12 ];
 for h = h_vec    
-    
+    disp('Constant Hessian');
+    disp(h);
+
     Hessf_const_handle = @(x) findiff_Hess_16(x, h);
         
     for n = dims
@@ -345,6 +347,9 @@ for h = h_vec
 
     % variable Hessian
     Hessf_var_handle = @(x) findiff_Hess_16(x, h * max(abs(x), 1e-12));
+    
+    disp('Variable Hessian');
+    disp(h);
 
     for n = dims
         disp(n)

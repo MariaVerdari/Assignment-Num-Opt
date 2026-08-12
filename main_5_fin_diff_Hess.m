@@ -54,8 +54,9 @@ modified_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta
 truncated_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax_T, eta);
 
 h_vec=[1e-4, 1e-8, 1e-12 ];
-for h = h_vec    
-    
+for h = h_vec
+    disp('Constant Hessian');
+    disp(h);
     Hessf_const_handle = @(x) findiff_Hess_5(x, h);
     
     dims = [2, 1e3, 1e4, 1e5];
@@ -321,7 +322,8 @@ for h = h_vec
 
     % variable Hessian
     Hessf_var_handle = @(x) findiff_Hess_5(x, h * max(abs(x), 1e-12));
-    
+    disp('Variable Hessian')
+    disp(h);
     for n = dims
         disp(n)
         start_points = [- ones(n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1)]; % deignated starting point and 5 randomly generated
