@@ -29,15 +29,15 @@ kmax_special = 300;
 tolgrad =  1e-8; %bo
 tolgrad_special = 1e-5;
 c1 = 1e-4;
-rho = 0.8;
+rho = 0.5; % cambiato da 0.8
 btmax = 50;
 beta = 1e-3; % nelle note 
 jmax_M = 40; %bo
 jmax_T= 500; %bo
-jmax_special_T  = 50;
+jmax_special_T  = 15; %da 50
 
-eta =  @(x)  min(0.5, x); %quadratic
-%eta =  @(x)  min(0.5, sqrt(x)); %superlinear
+%eta =  @(x)  min(0.5, x); %quadratic
+eta =  @(x)  min(0.5, sqrt(x)); %superlinear, prova
 
 f = @(x) problem_5(x);
 gradf = @(x) get_gradient_5(x);
