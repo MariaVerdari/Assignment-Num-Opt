@@ -243,11 +243,11 @@ for h = h_vec
     end
     
     % better levels
-    z_min = min(Z(:)); 
-    z_max = max(Z(:));
-    levels = logspace(log10(z_min + 0.1), log10(z_max), 80) - 0.1; 
-    
-    contour(X, Y, Z, levels, 'LineColor', [0.7 0.7 0.7]); 
+    z_min = min(real(Z(:))); 
+    z_max = max(real(Z(:)));
+    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
     hold on;
     
     c1 = [0.000, 0.447, 0.741]; 
@@ -291,11 +291,11 @@ for h = h_vec
     
     
     % better levels
-    z_min = min(Z(:)); 
-    z_max = max(Z(:));
-    levels = logspace(log10(z_min + 0.1), log10(z_max), 80) - 0.1; 
-    
-    contour(X, Y, Z, levels, 'LineColor', [0.7 0.7 0.7]); 
+    z_min = min(real(Z(:))); 
+    z_max = max(real(Z(:)));
+    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]); 
     hold on;
     
     c1 = [0.000, 0.447, 0.741]; 
@@ -517,11 +517,11 @@ for h = h_vec
     end
     
     % better levels
-    z_min = min(Z(:)); 
-    z_max = max(Z(:));
-    levels = logspace(log10(z_min + 0.1), log10(z_max), 80) - 0.1; 
-    
-    contour(X, Y, Z, levels, 'LineColor', [0.7 0.7 0.7]); 
+    z_min = min(real(Z(:))); 
+    z_max = max(real(Z(:)));
+    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
     hold on;
     
     c1 = [0.000, 0.447, 0.741]; 
@@ -564,12 +564,12 @@ for h = h_vec
     end
     
     
-    % better levels
-    z_min = min(Z(:)); 
-    z_max = max(Z(:));
-    levels = logspace(log10(z_min + 0.1), log10(z_max), 80) - 0.1; 
-    
-    contour(X, Y, Z, levels, 'LineColor', [0.7 0.7 0.7]); 
+    % better levels    
+    z_min = min(real(Z(:))); 
+    z_max = max(real(Z(:)));
+    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]); 
     hold on;
     
     c1 = [0.000, 0.447, 0.741]; 
