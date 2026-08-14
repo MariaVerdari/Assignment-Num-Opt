@@ -58,12 +58,11 @@ truncated_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jma
 
 h_vec=[1e-4, 1e-8, 1e-12 ];
 for h = h_vec
-    dims = [2, 1e3, 1e4, 1e5];
-
     % disp('Constant Hessian');
     % disp(h);
     % Hessf_const_handle = @(x) findiff_Hess_5(x, h);
     % 
+    % dims = [2, 1e3, 1e4, 1e5];
     % 
     % 
     % 
