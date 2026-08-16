@@ -1,0 +1,84 @@
+PROBLEM 16
+     2
+
+  Modified  | Pt 1 | Grad norm: 2.22e-16 | Iters: 7/1000 | Flag: 0 | Rate: 2.99 | Time: 0.0557s
+  Truncated | Pt 1 | Grad norm: 9.93e-13 | Iters: 4/5000 | Flag: 0 | Rate: 2.97 | Time: 0.0179s
+
+  Modified  | Pt 2 | Grad norm: 2.22e-16 | Iters: 8/1000 | Flag: 0 | Rate: 2.96 | Time: 0.0062s
+  Truncated | Pt 2 | Grad norm: 1.12e-11 | Iters: 4/5000 | Flag: 0 | Rate: 2.19 | Time: 0.0055s
+
+  Modified  | Pt 3 | Grad norm: 3.22e-15 | Iters: 7/1000 | Flag: 0 | Rate: 2.96 | Time: 0.0028s
+  Truncated | Pt 3 | Grad norm: 3.33e-16 | Iters: 4/5000 | Flag: 0 | Rate: 3.03 | Time: 0.0036s
+
+  Modified  | Pt 4 | Grad norm: 8.65e-13 | Iters: 6/1000 | Flag: 0 | Rate: 2.91 | Time: 0.0116s
+  Truncated | Pt 4 | Grad norm: 1.99e-08 | Iters: 6/5000 | Flag: 0 | Rate: 2.77 | Time: 0.0103s
+
+  Modified  | Pt 5 | Grad norm: 2.22e-16 | Iters: 5/1000 | Flag: 0 | Rate: 2.94 | Time: 0.0035s
+  Truncated | Pt 5 | Grad norm: 1.01e-10 | Iters: 4/5000 | Flag: 0 | Rate: 2.95 | Time: 0.0042s
+
+  Modified  | Pt 6 | Grad norm: 3.33e-16 | Iters: 9/1000 | Flag: 0 | Rate: 2.99 | Time: 0.0025s
+  Truncated | Pt 6 | Grad norm: 1.79e-10 | Iters: 5/5000 | Flag: 0 | Rate: 2.86 | Time: 0.0017s
+
+
+        1000
+
+  Modified  | Pt 1 | Grad norm: 8.82e-11 | Iters: 6/1000 | Flag: 0 | Rate: 2.85 | Time: 0.0332s
+  Truncated | Pt 1 | Grad norm: 1.47e-07 | Iters: 18/5000 | Flag: 0 | Rate: 1.16 | Time: 0.0526s
+
+  Modified  | Pt 2 | Grad norm: 8.48e-11 | Iters: 16/1000 | Flag: 0 | Rate: 2.97 | Time: 0.0183s
+  Truncated | Pt 2 | Grad norm: 9.53e-08 | Iters: 21/5000 | Flag: 0 | Rate: 1.24 | Time: 0.0228s
+
+  Modified  | Pt 3 | Grad norm: 1.25e-10 | Iters: 18/1000 | Flag: 0 | Rate: 2.91 | Time: 0.0218s
+  Truncated | Pt 3 | Grad norm: 7.48e-07 | Iters: 19/5000 | Flag: 0 | Rate: -0.29 | Time: 0.0336s
+
+  Modified  | Pt 4 | Grad norm: 1.27e-10 | Iters: 16/1000 | Flag: 0 | Rate: 2.96 | Time: 0.0306s
+  Truncated | Pt 4 | Grad norm: 6.66e-07 | Iters: 20/5000 | Flag: 0 | Rate: 1.38 | Time: 0.0479s
+
+  Modified  | Pt 5 | Grad norm: 9.42e-11 | Iters: 17/1000 | Flag: 0 | Rate: 2.86 | Time: 0.0261s
+  Truncated | Pt 5 | Grad norm: 1.46e-07 | Iters: 21/5000 | Flag: 0 | Rate: 3.66 | Time: 0.0857s
+
+  Modified  | Pt 6 | Grad norm: 2.63e-11 | Iters: 17/1000 | Flag: 0 | Rate: 2.98 | Time: 0.0417s
+  Truncated | Pt 6 | Grad norm: 3.04e-07 | Iters: 20/5000 | Flag: 0 | Rate: 1.07 | Time: 0.0361s
+
+
+       10000
+
+  Modified  | Pt 1 | Grad norm: 8.82e-11 | Iters: 6/1000 | Flag: 0 | Rate: 2.85 | Time: 0.0812s
+  Truncated | Pt 1 | Grad norm: 6.89e-06 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 267.4307s
+
+  Modified  | Pt 2 | Grad norm: 5.43e-09 | Iters: 18/1000 | Flag: 0 | Rate: 2.80 | Time: 0.1153s
+  Truncated | Pt 2 | Grad norm: 3.43e-05 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 258.4211s
+
+  Modified  | Pt 3 | Grad norm: 8.08e-09 | Iters: 20/1000 | Flag: 0 | Rate: 2.90 | Time: 0.1056s
+  Truncated | Pt 3 | Grad norm: 1.21e-05 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 223.5847s
+
+  Modified  | Pt 4 | Grad norm: 9.26e-09 | Iters: 22/1000 | Flag: 0 | Rate: 2.89 | Time: 0.1224s
+  Truncated | Pt 4 | Grad norm: 4.48e-05 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 232.0928s
+
+  Modified  | Pt 5 | Grad norm: 5.43e-09 | Iters: 16/1000 | Flag: 0 | Rate: 2.60 | Time: 0.0868s
+  Truncated | Pt 5 | Grad norm: 1.80e-05 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 234.8607s
+
+  Modified  | Pt 6 | Grad norm: 8.90e-09 | Iters: 26/1000 | Flag: 0 | Rate: -9.73 | Time: 0.1651s
+  Truncated | Pt 6 | Grad norm: 3.58e-05 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 241.6058s
+
+
+      100000
+
+  Modified  | Pt 1 | Grad norm: 8.82e-11 | Iters: 6/1000 | Flag: 0 | Rate: 2.85 | Time: 0.4210s
+  Truncated | Pt 1 | Grad norm: 1.94e-04 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 2243.2047s
+
+  Modified  | Pt 2 | Grad norm: 3.55e-06 | Iters: 27/1000 | Flag: 0 | Rate: 2.64 | Time: 1.4596s
+  Truncated | Pt 2 | Grad norm: 1.21e-03 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 2384.8471s
+
+  Modified  | Pt 3 | Grad norm: 1.45e-06 | Iters: 26/1000 | Flag: 0 | Rate: 2.65 | Time: 1.3813s
+  Truncated | Pt 3 | Grad norm: 7.41e-04 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 2227.8538s
+
+  Modified  | Pt 4 | Grad norm: 2.76e-06 | Iters: 29/1000 | Flag: 0 | Rate: 2.62 | Time: 1.4883s
+  Truncated | Pt 4 | Grad norm: 3.02e-03 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 2273.9371s
+
+  Modified  | Pt 5 | Grad norm: 6.98e-07 | Iters: 26/1000 | Flag: 0 | Rate: 0.85 | Time: 1.4616s
+  Truncated | Pt 5 | Grad norm: 4.90e-04 | Iters: 5000/5000 | Flag: 4 | Rate: NaN | Time: 2383.1467s
+
+  Modified  | Pt 6 | Grad norm: 2.78e-06 | Iters: 30/1000 | Flag: 0 | Rate: 2.97 | Time: 1.9232s
+  Truncated | Pt 6 | Grad norm: 2.94e-04 | Iters: 5000/5000 | Flag: 4 | Rate: -1.00 | Time: 2182.8082s
+
