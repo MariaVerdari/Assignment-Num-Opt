@@ -1,51 +1,47 @@
 function [gradfx] = findiff_grad_16(x, h, type)
 % Function that approximates the gradient of the Banded trigonometric problem
-
-
-    x = x(:);
+    x = x(:); % column vector
     n = length(x);
-    gradfx = zeros(size(x));
     
     if isscalar(h)
         h = h * ones(n, 1);
     end
-
+    
+    k_vec = (1:n-1)';
+    
     switch type
         case 'fw'
-            for k = 1:n
-                hk = h(k);
-                xk = x(k);
-                xk_h = x(k) + hk;
-                
-                if k < n
-                    f_base = k * (1 - cos(xk)) + 2 * sin(xk);
-                    f_fw   = k * (1 - cos(xk_h)) + 2 * sin(xk_h);
-                else 
-                    f_base = n * (1 - cos(xk)) - (n - 1) * sin(xk);
-                    f_fw   = n * (1 - cos(xk_h)) - (n - 1) * sin(xk_h);
-                end
-                
-                gradfx(k) = (f_fw - f_base) / hk;
-            end
+            x_h = x + h;
+            
+            gradfx = zeros(n, 1);
+            
+            % k < n
+            f_base_n1 = k_vec .* (1 - cos(x(1:n-1))) + 2 * sin(x(1:n-1));
+            f_fw_n1   = k_vec .* (1 - cos(x_h(1:n-1))) + 2 * sin(x_h(1:n-1));
+            gradfx(1:n-1) = (f_fw_n1 - f_base_n1) ./ h(1:n-1);
+            
+            % k = n
+            f_base_n = n * (1 - cos(x(n))) - (n - 1) * sin(x(n));
+            f_fw_n   = n * (1 - cos(x_h(n))) - (n - 1) * sin(x_h(n));
+            gradfx(n) = (f_fw_n - f_base_n) / h(n);
             
         case 'c'
-            for k = 1:n
-                hk = h(k);
-                xk_plus  = x(k) + hk;
-                xk_minus = x(k) - hk;
-                
-                if k < n
-                    f_plus  = k * (1 - cos(xk_plus)) + 2 * sin(xk_plus);
-                    f_minus = k * (1 - cos(xk_minus)) + 2 * sin(xk_minus);
-                else
-                    f_plus  = n * (1 - cos(xk_plus)) - (n - 1) * sin(xk_plus);
-                    f_minus = n * (1 - cos(xk_minus)) - (n - 1) * sin(xk_minus);
-                end
-                
-                gradfx(k) = (f_plus - f_minus) / (2 * hk);
-            end
+            x_plus  = x + h;
+            x_minus = x - h;
+            
+            gradfx = zeros(n, 1);
+            
+            % k < n
+            f_plus_n1  = k_vec .* (1 - cos(x_plus(1:n-1))) + 2 * sin(x_plus(1:n-1));
+            f_minus_n1 = k_vec .* (1 - cos(x_minus(1:n-1))) + 2 * sin(x_minus(1:n-1));
+            gradfx(1:n-1) = (f_plus_n1 - f_minus_n1) ./ (2 * h(1:n-1));
+            
+            %  k = n
+            f_plus_n  = n * (1 - cos(x_plus(n))) - (n - 1) * sin(x_plus(n));
+            f_minus_n = n * (1 - cos(x_minus(n))) - (n - 1) * sin(x_minus(n));
+            gradfx(n) = (f_plus_n - f_minus_n) / (2 * h(n));
             
         otherwise
-            error('Inserire un tipo valido: ''fw'' (forward) o ''c'' (centered)');
+            error('Inserted Type is not valid');
     end
 end

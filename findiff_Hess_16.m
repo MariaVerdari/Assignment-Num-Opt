@@ -1,34 +1,33 @@
 function [Hessfx] = findiff_Hess_16(x, h)
-% Function that approximates the Hessian of the Banded trigonometric problem
+% Function that approximates the Hessian of the Banded trigonometric
+% problem exploiting the diagonal structure
 
-    x = x(:);
+    x = x(:); % column vector
     n = length(x);
-    
-    Hessfx = sparse(n, n);
     
     if isscalar(h)
         h = h * ones(n, 1);
     end
-
-    for k = 1:n
-        xk = x(k);
-        
-        hk = h(k); 
-        
-        xk_plus  = xk + hk;
-        xk_minus = xk - hk;
-        
-
-        if k < n
-            f_base  = k * (1 - cos(xk)) + 2 * sin(xk);
-            f_plus  = k * (1 - cos(xk_plus)) + 2 * sin(xk_plus);
-            f_minus = k * (1 - cos(xk_minus)) + 2 * sin(xk_minus);
-        else 
-            f_base  = n * (1 - cos(xk)) - (n - 1) * sin(xk);
-            f_plus  = n * (1 - cos(xk_plus)) - (n - 1) * sin(xk_plus);
-            f_minus = n * (1 - cos(xk_minus)) - (n - 1) * sin(xk_minus);
-        end
-        
-        Hessfx(k, k) = (f_plus - 2*f_base + f_minus) / (hk^2);
-    end
+    
+    x_plus  = x + h;
+    x_minus = x - h;
+    k_vec   = (1:n-1)';
+    
+    diag_H = zeros(n, 1);
+    
+    % k < n
+    f_base_n1  = k_vec .* (1 - cos(x(1:n-1))) + 2 * sin(x(1:n-1));
+    f_plus_n1  = k_vec .* (1 - cos(x_plus(1:n-1))) + 2 * sin(x_plus(1:n-1));
+    f_minus_n1 = k_vec .* (1 - cos(x_minus(1:n-1))) + 2 * sin(x_minus(1:n-1));
+    
+    diag_H(1:n-1) = (f_plus_n1 - 2*f_base_n1 + f_minus_n1) ./ (h(1:n-1).^2);
+    
+    % k = n
+    f_base_n  = n * (1 - cos(x(n))) - (n - 1) * sin(x(n));
+    f_plus_n  = n * (1 - cos(x_plus(n))) - (n - 1) * sin(x_plus(n));
+    f_minus_n = n * (1 - cos(x_minus(n))) - (n - 1) * sin(x_minus(n));
+    
+    diag_H(n) = (f_plus_n - 2*f_base_n + f_minus_n) / (h(n)^2);
+    
+    Hessfx = spdiags(diag_H, 0, n, n); %sparse
 end

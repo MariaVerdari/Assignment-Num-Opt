@@ -1,14 +1,15 @@
 function [gradfx] = findiff_grad_5(x, h, type)
-% Function that approximates the gradient of the Generalized Broyden tridiagonal function exploiting the sparsity and the tridiagonal structure
+% Function that approximates the gradient of the Generalized Broyden
+% tridiagonal function exploiting the structure of the function
 
-    x = x(:);
+    x = x(:); %column vector
     n = length(x);
     p = 7/3;
     gradfx = zeros(size(x));
 
     x_prev = [0; x(1:n-1)];
     x_next = [x(2:n); 0];
-    f_base = (3 - 2*x).*x - x_prev - x_next + 1;
+    f_base = (3 - 2*x).*x - x_prev - x_next + 1; % all the f_i evaluated at the considered x
     
     if isscalar(h)
         h = h * ones(n, 1);
@@ -17,13 +18,13 @@ function [gradfx] = findiff_grad_5(x, h, type)
     switch type
         case 'fw'
             for k = 1:n
-                idx = max(1, k-1) : min(n, k+1);
+                idx = max(1, k-1) : min(n, k+1); %indexes of the f_i that are affected by the perturbation  
                 
                 F_base_local = sum(abs(f_base(idx)).^p);
                 
-                hk = h(k);
+                hk = h(k); %increment
                 xh = x;
-                xh(k) = xh(k) + hk;
+                xh(k) = xh(k) + hk; % x + h * e_k (perturbed x)
                 
                 F_fw_local = 0;
                 for i = idx
@@ -40,11 +41,13 @@ function [gradfx] = findiff_grad_5(x, h, type)
             
         case 'c'
             for k = 1:n
-                idx = max(1, k-1) : min(n, k+1);
+                idx = max(1, k-1) : min(n, k+1); %indexes of the f_i that are affected by the perturbation
                 
-                hk = h(k);
-                xh_plus = x;  xh_plus(k) = xh_plus(k) + hk;
-                xh_minus = x; xh_minus(k) = xh_minus(k) - hk;
+                hk = h(k); %increment
+                xh_plus = x;  
+                xh_plus(k) = xh_plus(k) + hk; % x + h * e_k (perturbed x)
+                xh_minus = x; 
+                xh_minus(k) = xh_minus(k) - hk; % x - h * e_k (perturbed x)
                 
                 F_fw_local = 0;
                 F_bw_local = 0;
@@ -69,6 +72,6 @@ function [gradfx] = findiff_grad_5(x, h, type)
             end
             
         otherwise
-            error('Inserire un tipo valido: ''fw'' (forward) o ''c'' (centered)');
+            error('Inserted Type is not valid');
     end
 end
