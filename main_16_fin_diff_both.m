@@ -73,7 +73,7 @@ for h = h_vec
     disp(h);
 
     Hessf_const_handle = @(x) findiff_Hess_16(x, h);
-    gradf_const_handle = @(x) findiff_grad_16(x, h); 
+    gradf_const_handle = @(x) findiff_grad_16(x, h, 'c'); 
     for n = dims
         disp(n)
     
@@ -356,7 +356,7 @@ for h = h_vec
 
     % variable Hessian
     Hessf_var_handle = @(x) findiff_Hess_16(x, h * max(abs(x), 1e-12));
-    gradf_var_handle = @(x) findiff_grad_16(x, h * max(abs(x), 1e-12));
+    gradf_var_handle = @(x) findiff_grad_16(x, h * max(abs(x), 1e-12), 'c');
     
     disp('Variable gradient and Hessian');
     disp(h);
