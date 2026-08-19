@@ -13,8 +13,7 @@ function [F, gradF, HessF] = problem_5(x)
     
     F = sum(abs(f_val).^p);
     
-    % if we don't want the gradient
-    if nargout < 2
+    if nargout < 2 % if we don't want the gradient
         return;
     end
     
@@ -24,8 +23,7 @@ function [F, gradF, HessF] = problem_5(x)
     
     gradF = g .* (3 - 4*x) - g_prev - g_next;
     
-    % if we don't want the Hessian
-    if nargout < 3
+    if nargout < 3  % if we don't want the Hessian
         return;
     end
     

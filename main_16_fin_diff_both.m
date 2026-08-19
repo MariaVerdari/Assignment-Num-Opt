@@ -57,7 +57,8 @@ eta =  @(x)  min(0.5, x); %quadratic
 
 
 
-dims = [2, 1e3, 1e4, 1e5];
+%dims = [2, 1e3, 1e4, 1e5];
+dims = [1e4];
 
 % warmup
 x_warmup = -ones(2,1);

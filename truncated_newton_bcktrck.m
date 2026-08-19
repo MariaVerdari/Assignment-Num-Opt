@@ -14,7 +14,7 @@ err_seq = zeros(kmax,1);
 
 
 if (n==2)
-    xseq = zeros(n, kmax); %storing all the sequence for the plot
+    xseq = zeros(n, kmax); %storing all the sequence for the plot of the path only for n = 2
 else
     xseq = zeros(n, 4); %storing the last 4 of the sequence for memory reasons
     xseq(:,4) = x0;
@@ -62,9 +62,9 @@ while(gradfk_norm_vec(k+1) >= tolgrad && k < kmax)
     pk = z;
 
 
-    %check if pk is descent direction (SHOULD ALWAYS BE)
+    %check if pk is descent direction (it should always be)
     if (pk'*gradf(xk)>0)
-        flag_multi = 1; %no descent
+        flag_multi = 1; %no descent direction
         break
     end
 
@@ -78,7 +78,7 @@ while(gradfk_norm_vec(k+1) >= tolgrad && k < kmax)
         xnew = xk + alpha *pk; 
     end
 
-    if (f(xnew)> f(xk)+ c1*alpha*pk'*gradf(xk)) %if the last step does not satisfy armijo I break everything (we should restart the method with different parameters)
+    if (f(xnew)> f(xk)+ c1*alpha*pk'*gradf(xk)) %if the last step does not satisfy armijo I break everything
         flag_multi = 2; %no armijo
         break
     end 

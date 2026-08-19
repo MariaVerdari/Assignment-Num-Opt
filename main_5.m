@@ -1,6 +1,3 @@
-
-
-
 clear
 clc
 close all
@@ -10,8 +7,6 @@ close all
 % set random seed
 
 rng(358655)
-
-
 
 
 
@@ -38,23 +33,17 @@ end
 
 
 % fine tuned parameters
-% vedere se differenziare 
 
-kmax = 1000; %bo 5000
-tolgrad =  1e-8; %bo
+kmax = 1000; 
+tolgrad =  1e-8; 
 c1 = 1e-4;
 rho = 0.8;
 btmax = 50;
-beta = 1e-3; % nelle note 
-jmax_M = 40; %bo
-jmax_T= 500; %bo
+beta = 1e-3; 
+jmax_M = 40; 
+jmax_T= 500; 
 
 eta =  @(x)  min(0.5, x); %quadratic
-%eta =  @(x)  min(0.5, sqrt(x)); %superlinear
-
-
-
-
 
 
 dims = [2, 1e3, 1e4, 1e5];
@@ -68,14 +57,14 @@ truncated_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jma
 
 for n = dims
     disp(n)
-    start_points = [- ones(n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1)]; % deignated starting point and 5 randomly generated
+    start_points = [- ones(n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1), unifrnd(-2, 0, n,1)]; % one designated starting point and 5 randomly generated
     
 
     % storing gradient norms
     gradBigSeq_M = cell(length(start_points), 1);
     gradBigSeq_T = cell(length(start_points), 1);
 
-    
+    % storing paths
     if n == 2
         xBigSeq_M = cell(length(start_points),1);
         xBigSeq_T = cell(length(start_points),1);
@@ -98,6 +87,7 @@ for n = dims
         [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T, err_seq_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, jmax_T, eta);
         time_T = toc;
 
+        % storing paths
         if n==2
             xBigSeq_M{num} = xseq_M;
             xBigSeq_T{num} = xseq_T;

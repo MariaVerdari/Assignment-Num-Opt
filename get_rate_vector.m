@@ -1,4 +1,5 @@
 function p_vec = get_rate_vector(err_seq)
+% Function for the computation of the experimental rate of convergence
     len = length(err_seq);
     p_vec = NaN(len, 1); 
     

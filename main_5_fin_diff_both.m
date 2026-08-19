@@ -62,8 +62,9 @@ for h = h_vec
     disp(h);
     Hessf_const_handle = @(x) findiff_Hess_5(x, h);
     gradf_const_handle = @(x) findiff_grad_5(x, h);
-    dims = [2, 1e3, 1e4, 1e5];
-    
+
+    %dims = [2, 1e3, 1e4, 1e5];
+    dims = [1e4];    
     
     
     for n = dims

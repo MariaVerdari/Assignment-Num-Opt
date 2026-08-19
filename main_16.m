@@ -33,7 +33,6 @@ end
 
 
 % fine tuned parameters
-% vedere se differenziare 
 
 kmax_M = 1000; %bo 
 kmax_T = 5000; %bo truncated raggiungeva kmax 1000 3
@@ -75,7 +74,7 @@ for n = dims
     gradBigSeq_M = cell(length(start_points), 1);
     gradBigSeq_T = cell(length(start_points), 1);
 
-    
+    % storing paths
     if n == 2
         xBigSeq_M = cell(length(start_points),1);
         xBigSeq_T = cell(length(start_points),1);
@@ -105,7 +104,7 @@ for n = dims
         [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T,err_seq_T] = truncated_newton_bcktrck(x0,f,gradf,Hessf,kmax_T,tolgrad_T,c1, rho_T, btmax_T, jmax_T, eta);
         time_T = toc;
 
-
+        % storing paths
         if n==2
             xBigSeq_M{num} = xseq_M;
             xBigSeq_T{num} = xseq_T;

@@ -1,7 +1,6 @@
 function [xk,fk,gradfk_norm_vec,k,xseq, btseq, flag_multi, err_seq] = modified_newton_bcktrck(x0,f,gradf,Hessf,kmax,tolgrad,c1, rho, btmax, beta, jmax)
 %Implementation of the modified Newton method with backtracking for optimization
 
-%AGGIUNGERE PRINT ALPHA E TAU
 
 k = 0;
 xk =x0;
@@ -12,9 +11,9 @@ btseq = zeros(kmax+1,1);
 err_seq = zeros(kmax,1);
 
 if (n==2)
-    xseq = zeros(n, kmax); %storing all the sequence for the plot
+    xseq = zeros(n, kmax); %storing all the sequence for the plot of the path only for dim n = 2
 else
-    xseq = zeros(n, 4); %storing the last 4 of the sequence for memory reasons
+    xseq = zeros(n, 4); %storing the last 4 of the sequence for memory reasons for the experimental rate
     xseq(:,4) = x0;
 end
 
@@ -53,12 +52,9 @@ while(gradfk_norm_vec(k+1) >= tolgrad && k < kmax)
 
 
 
-
-
     %Bk = H + (tauk*speye(n));
 
 
- 
     %new descent direction
 
     y = (R')\(-gradf(xk));
@@ -80,7 +76,7 @@ while(gradfk_norm_vec(k+1) >= tolgrad && k < kmax)
         xnew = xk + alpha *pk; 
     end
 
-    if (f(xnew)> f(xk) + c1*alpha*pk'*gradf(xk)) %if the last step does not satisfy armijo I break everything (we should restart the method with different parameters)
+    if (f(xnew)> f(xk) + c1*alpha*pk'*gradf(xk)) %if the last step does not satisfy armijo I break everything 
         flag_multi = 2; %flag if not Armijo
         break
     end 
