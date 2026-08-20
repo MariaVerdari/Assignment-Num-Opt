@@ -1,4 +1,3 @@
-
 clear
 clc
 close all
@@ -33,13 +32,12 @@ end
 
 
 % fine tuned parameters
-% vedere se differenziare 
 
 kmax_M = 1000; %bo 
-kmax_T = 5000; %bo truncated raggiungeva kmax 1000 3
-tolgrad_M =  1e-7; %bo
+kmax_T = 500; %CAMBIATO
+tolgrad_M =  1e-5; %bo ABBASSATO 
 tolgrad_M_big = 1e-5; % raggiungeva 1000 it per la dim piu alta 6
-tolgrad_T =  1e-5; %bo 5
+tolgrad_T =  1e-4; %bo 5 ABBASSATO
 c1 = 1e-4;
 rho_M = 0.5;% evitare flag 2 
 rho_T = 0.5; 
@@ -58,7 +56,7 @@ eta =  @(x)  min(0.5, x); %quadratic
 
 
 %dims = [2, 1e3, 1e4, 1e5];
-dims = [1e4];
+dims = [2];
 
 % warmup
 x_warmup = -ones(2,1);
@@ -67,10 +65,15 @@ truncated_newton_bcktrck(x_warmup,f,gradf,Hessf,kmax_T,tolgrad_T,c1, rho_T, btma
 
 
 h_vec=[1e-4, 1e-8, 1e-12 ];
+
+
+
 for h = h_vec    
     
     disp('Constant gradient and Hessian');
     disp(h);
+
+    % constant increment gradient and Hessian
 
     Hessf_const_handle = @(x) findiff_Hess_16(x, h);
     gradf_const_handle = @(x) findiff_grad_16(x, h, 'c'); 
@@ -83,7 +86,7 @@ for h = h_vec
         gradBigSeq_M = cell(length(start_points), 1);
         gradBigSeq_T = cell(length(start_points), 1);
     
-        
+        % storing paths
         if n == 2
             xBigSeq_M = cell(length(start_points),1);
             xBigSeq_T = cell(length(start_points),1);
@@ -257,104 +260,104 @@ for h = h_vec
     %figures
     
     
-    % TOP VIEW MODIFIED
-    % figure;
-    % [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
-    % Z = zeros(size(X));
-    % 
-    % for i = 1:size(X, 1)
-    %     for j = 1:size(X, 2)
-    %         Z(i,j) = f([X(i,j); Y(i,j)]); 
-    %     end
-    % end
-    % 
-    % % better levels
-    % z_min = min(real(Z(:))); 
-    % z_max = max(real(Z(:)));
-    % levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
-    % 
-    % contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
-    % hold on;
-    % 
-    % c1 = [0.000, 0.447, 0.741]; 
-    % c2 = [0.850, 0.325, 0.098]; 
-    % c3 = [0.466, 0.674, 0.188]; 
-    % c4 = [0.494, 0.184, 0.556]; 
-    % c5 = [0.929, 0.694, 0.125]; 
-    % c6 = [0.850, 0.000, 0.150];
-    % 
-    % lw = 1.5; 
-    % ms = 12;  
-    % 
-    % plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
-    % plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
-    % plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
-    % plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
-    % plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
-    % plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
-    % 
-    % 
-    % title('Top view of the function and sequence paths, problem 16, Modified (n=2)');
-    % 
-    % xlabel('x_1');
-    % ylabel('x_2');
-    % legend('show');
-    % xlim([-2.5, 1]);
-    % ylim([-2.5, 0.5]);
-    % 
-    % 
-    % 
-    % 
-    % % TOP VIEW TRUNCATED
-    % figure;
-    % [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
-    % Z = zeros(size(X));
-    % 
-    % for i = 1:size(X, 1)
-    %     for j = 1:size(X, 2)
-    %         Z(i,j) = f([X(i,j); Y(i,j)]); 
-    %     end
-    % end
-    % 
-    % 
-    % % better levels
-    % z_min = min(real(Z(:))); 
-    % z_max = max(real(Z(:)));
-    % levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
-    % 
-    % contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
-    % hold on;
-    % 
-    % c1 = [0.000, 0.447, 0.741]; 
-    % c2 = [0.850, 0.325, 0.098]; 
-    % c3 = [0.466, 0.674, 0.188]; 
-    % c4 = [0.494, 0.184, 0.556]; 
-    % c5 = [0.929, 0.694, 0.125]; 
-    % c6 = [0.850, 0.000, 0.150];
-    % 
-    % lw = 1.5; 
-    % ms = 12;  
-    % 
-    % plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
-    % plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
-    % plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
-    % plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
-    % plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
-    % plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
-    % 
-    % 
-    % 
-    % 
-    % title('Top view of the function and sequence paths, problem 16, Truncated (n=2)');
-    % 
-    % xlabel('x_1');
-    % ylabel('x_2');
-    % legend('show');
-    % xlim([-2.5,1]);
-    % ylim([-2.5, 0.5]);
-    % 
+    TOP VIEW MODIFIED
+    figure;
+    [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
+    Z = zeros(size(X));
 
-    % variable Hessian
+    for i = 1:size(X, 1)
+        for j = 1:size(X, 2)
+            Z(i,j) = f([X(i,j); Y(i,j)]); 
+        end
+    end
+
+    % better levels
+    z_min = min(real(Z(:))); 
+    z_max = max(real(Z(:)));
+    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
+    hold on;
+
+    c1 = [0.000, 0.447, 0.741]; 
+    c2 = [0.850, 0.325, 0.098]; 
+    c3 = [0.466, 0.674, 0.188]; 
+    c4 = [0.494, 0.184, 0.556]; 
+    c5 = [0.929, 0.694, 0.125]; 
+    c6 = [0.850, 0.000, 0.150];
+
+    lw = 1.5; 
+    ms = 12;  
+
+    plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+    plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
+    plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
+    plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
+    plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
+    plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
+
+
+    title('Top view of the function and sequence paths, problem 16, Modified (n=2)');
+
+    xlabel('x_1');
+    ylabel('x_2');
+    legend('show');
+    xlim([-2.5, 1]);
+    ylim([-2.5, 0.5]);
+
+
+
+
+    % TOP VIEW TRUNCATED
+    figure;
+    [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
+    Z = zeros(size(X));
+
+    for i = 1:size(X, 1)
+        for j = 1:size(X, 2)
+            Z(i,j) = f([X(i,j); Y(i,j)]); 
+        end
+    end
+
+
+    % better levels
+    z_min = min(real(Z(:))); 
+    z_max = max(real(Z(:)));
+    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
+    hold on;
+
+    c1 = [0.000, 0.447, 0.741]; 
+    c2 = [0.850, 0.325, 0.098]; 
+    c3 = [0.466, 0.674, 0.188]; 
+    c4 = [0.494, 0.184, 0.556]; 
+    c5 = [0.929, 0.694, 0.125]; 
+    c6 = [0.850, 0.000, 0.150];
+
+    lw = 1.5; 
+    ms = 12;  
+
+    plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+    plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
+    plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
+    plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
+    plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
+    plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
+
+
+
+
+    title('Top view of the function and sequence paths, problem 16, Truncated (n=2)');
+
+    xlabel('x_1');
+    ylabel('x_2');
+    legend('show');
+    xlim([-2.5,1]);
+    ylim([-2.5, 0.5]);
+
+
+    % variable increment gradient and Hessian
     Hessf_var_handle = @(x) findiff_Hess_16(x, h * max(abs(x), 1e-12));
     gradf_var_handle = @(x) findiff_grad_16(x, h * max(abs(x), 1e-12), 'c');
     
@@ -370,7 +373,7 @@ for h = h_vec
         gradBigSeq_M = cell(length(start_points), 1);
         gradBigSeq_T = cell(length(start_points), 1);
     
-        
+        % storing paths
         if n == 2
             xBigSeq_M = cell(length(start_points),1);
             xBigSeq_T = cell(length(start_points),1);
@@ -400,7 +403,7 @@ for h = h_vec
             [xk_T,fk_T,gradfk_norm_vec_T,k_T,xseq_T, btseq_T, flag_multi_T, err_seq_T] = truncated_newton_bcktrck(x0,f,gradf_var_handle,Hessf_var_handle,kmax_T,tolgrad_T,c1, rho_T, btmax_T, jmax_T, eta);
             time_T = toc;
     
-    
+            %storing paths
             if n==2
                 xBigSeq_M{num} = xseq_M;
                 xBigSeq_T{num} = xseq_T;
@@ -544,100 +547,100 @@ for h = h_vec
     %figures
     
     
-    % TOP VIEW MODIFIED
-    % figure;
-    % [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
-    % Z = zeros(size(X));
-    % 
-    % for i = 1:size(X, 1)
-    %     for j = 1:size(X, 2)
-    %         Z(i,j) = f([X(i,j); Y(i,j)]); 
-    %     end
-    % end
-    % 
-    % % better levels
-    % z_min = min(real(Z(:))); 
-    % z_max = max(real(Z(:)));
-    % levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
-    % 
-    % contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
-    % hold on;
-    % 
-    % c1 = [0.000, 0.447, 0.741]; 
-    % c2 = [0.850, 0.325, 0.098]; 
-    % c3 = [0.466, 0.674, 0.188]; 
-    % c4 = [0.494, 0.184, 0.556]; 
-    % c5 = [0.929, 0.694, 0.125]; 
-    % c6 = [0.850, 0.000, 0.150];
-    % 
-    % lw = 1.5; 
-    % ms = 12;  
-    % 
-    % plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
-    % plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
-    % plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
-    % plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
-    % plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
-    % plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
-    % 
-    % title('Top view of the function and sequence paths, problem 16, Modified (n=2)');
-    % 
-    % xlabel('x_1');
-    % ylabel('x_2');
-    % legend('show');
-    % xlim([-2.5, 1]);
-    % ylim([-2.5, 0.5]);
-    % 
-    % 
-    % 
-    % 
-    % % TOP VIEW TRUNCATED
-    % figure;
-    % [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
-    % Z = zeros(size(X));
-    % 
-    % for i = 1:size(X, 1)
-    %     for j = 1:size(X, 2)
-    %         Z(i,j) = f([X(i,j); Y(i,j)]); 
-    %     end
-    % end
-    % 
-    % 
-    % % better levels
-    % z_min = min(real(Z(:))); 
-    % z_max = max(real(Z(:)));
-    % levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
-    % 
-    % contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
-    % hold on;
-    % 
-    % c1 = [0.000, 0.447, 0.741]; 
-    % c2 = [0.850, 0.325, 0.098]; 
-    % c3 = [0.466, 0.674, 0.188]; 
-    % c4 = [0.494, 0.184, 0.556]; 
-    % c5 = [0.929, 0.694, 0.125]; 
-    % c6 = [0.850, 0.000, 0.150];
-    % 
-    % lw = 1.5; 
-    % ms = 12;  
-    % 
-    % plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
-    % plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
-    % plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
-    % plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
-    % plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
-    % plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
-    % 
-    % 
-    % 
-    % 
-    % title('Top view of the function and sequence paths, problem 16, Truncated (n=2)');
-    % 
-    % xlabel('x_1');
-    % ylabel('x_2');
-    % legend('show');
-    % xlim([-2.5,1]);
-    % ylim([-2.5, 0.5]);
+    TOP VIEW MODIFIED
+    figure;
+    [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
+    Z = zeros(size(X));
+
+    for i = 1:size(X, 1)
+        for j = 1:size(X, 2)
+            Z(i,j) = f([X(i,j); Y(i,j)]); 
+        end
+    end
+
+    % better levels
+    z_min = min(real(Z(:))); 
+    z_max = max(real(Z(:)));
+    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
+    hold on;
+
+    c1 = [0.000, 0.447, 0.741]; 
+    c2 = [0.850, 0.325, 0.098]; 
+    c3 = [0.466, 0.674, 0.188]; 
+    c4 = [0.494, 0.184, 0.556]; 
+    c5 = [0.929, 0.694, 0.125]; 
+    c6 = [0.850, 0.000, 0.150];
+
+    lw = 1.5; 
+    ms = 12;  
+
+    plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+    plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
+    plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
+    plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
+    plot(xBigSeq_M{5}(1,:), xBigSeq_M{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
+    plot(xBigSeq_M{6}(1,:), xBigSeq_M{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
+
+    title('Top view of the function and sequence paths, problem 16, Modified (n=2)');
+
+    xlabel('x_1');
+    ylabel('x_2');
+    legend('show');
+    xlim([-2.5, 1]);
+    ylim([-2.5, 0.5]);
+
+
+
+
+    % TOP VIEW TRUNCATED
+    figure;
+    [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
+    Z = zeros(size(X));
+
+    for i = 1:size(X, 1)
+        for j = 1:size(X, 2)
+            Z(i,j) = f([X(i,j); Y(i,j)]); 
+        end
+    end
+
+
+    % better levels
+    z_min = min(real(Z(:))); 
+    z_max = max(real(Z(:)));
+    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
+    hold on;
+
+    c1 = [0.000, 0.447, 0.741]; 
+    c2 = [0.850, 0.325, 0.098]; 
+    c3 = [0.466, 0.674, 0.188]; 
+    c4 = [0.494, 0.184, 0.556]; 
+    c5 = [0.929, 0.694, 0.125]; 
+    c6 = [0.850, 0.000, 0.150];
+
+    lw = 1.5; 
+    ms = 12;  
+
+    plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+    plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
+    plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
+    plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
+    plot(xBigSeq_T{5}(1,:), xBigSeq_T{5}(2,:), '.-', 'Color', c5, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 5');
+    plot(xBigSeq_T{6}(1,:), xBigSeq_T{6}(2,:), '.-', 'Color', c6, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 6');
+
+
+
+
+    title('Top view of the function and sequence paths, problem 16, Truncated (n=2)');
+
+    xlabel('x_1');
+    ylabel('x_2');
+    legend('show');
+    xlim([-2.5,1]);
+    ylim([-2.5, 0.5]);
 
 
     

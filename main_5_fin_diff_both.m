@@ -28,7 +28,7 @@ disp("PROBLEM 5")
 % vedere se differenziare 
 
 kmax = 1000; %bo 5000
-tolgrad =  1e-8; %bo
+tolgrad =  1e-5; %bo
 c1 = 1e-4;
 rho = 0.5; %CAMBIATO
 btmax = 100; %CAMBIATO
