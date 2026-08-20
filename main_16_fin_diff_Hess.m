@@ -37,16 +37,16 @@ end
 
 kmax_M = 1000; %bo 
 kmax_T = 500; %bo truncated ci mette trooppo e non converge 
-tolgrad_M =  1e-8; %bo
+tolgrad_M =  1e-5; %bo
 tolgrad_M_big = 1e-5; % raggiungeva 1000 it per la dim piu alta 6
 tolgrad_T =  1e-5; %bo 5
 c1 = 1e-4;
 rho_M = 0.8;
-rho_T = 0.5; % evitare flag 2 su truncated 2
+rho_T = 0.8; % evitare flag 2 su truncated 2
 btmax_M = 50;
-btmax_T = 100;
-beta = 1e-3; % nelle note 
-%beta = 0.5; % evitare che vadano in altri minimi 1
+btmax_T = 60;
+%beta = 1e-3; % nelle note 
+beta = 0.5; % evitare che vadano in altri minimi 1
 jmax_M = 40; %bo
 jmax_T= 50; %bo era 500  ci metteva troppo e non avevamo buoni risultati 7
 

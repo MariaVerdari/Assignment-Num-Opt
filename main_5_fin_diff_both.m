@@ -30,8 +30,8 @@ disp("PROBLEM 5")
 kmax = 1000; %bo 5000
 tolgrad =  1e-5; %bo
 c1 = 1e-4;
-rho = 0.5; %CAMBIATO
-btmax = 100; %CAMBIATO
+rho = 0.8; %CAMBIATO
+btmax = 60; %CAMBIATO
 beta = 1e-3; % nelle note 
 jmax_M = 40; %bo
 jmax_T= 500; %bo
