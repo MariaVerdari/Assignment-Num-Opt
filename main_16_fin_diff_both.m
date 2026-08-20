@@ -260,7 +260,7 @@ for h = h_vec
     %figures
     
     
-    TOP VIEW MODIFIED
+    %TOP VIEW MODIFIED
     figure;
     [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
     Z = zeros(size(X));
@@ -271,15 +271,27 @@ for h = h_vec
         end
     end
 
+    
+
+
     % better levels
     z_min = min(real(Z(:))); 
     z_max = max(real(Z(:)));
-    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    % 1. Livelli lineari molto fitti per il centro vuoto (es. dal minimo a minimo + 0.5)
+    levels_center = linspace(z_min, z_min + 7, 30); 
+    
+    % 2. Livelli logaritmici per i bordi ripidi
+    levels_outer = logspace(real(log10(z_min + 7)), real(log10(z_max)), 70);
+    
+    % Uniamo i due set di livelli rimuovendo eventuali duplicati
+    levels = unique([levels_center, levels_outer]); 
 
     contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
     hold on;
 
-    c1 = [0.000, 0.447, 0.741]; 
+   
+    col1 = [0.000, 0.447, 0.741]; 
     c2 = [0.850, 0.325, 0.098]; 
     c3 = [0.466, 0.674, 0.188]; 
     c4 = [0.494, 0.184, 0.556]; 
@@ -289,7 +301,7 @@ for h = h_vec
     lw = 1.5; 
     ms = 12;  
 
-    plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+    plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', col1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
     plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
     plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
     plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
@@ -302,10 +314,9 @@ for h = h_vec
     xlabel('x_1');
     ylabel('x_2');
     legend('show');
-    xlim([-2.5, 1]);
-    ylim([-2.5, 0.5]);
 
-
+    xlim([-3,2]);
+    ylim([-1, 2]);
 
 
     % TOP VIEW TRUNCATED
@@ -319,16 +330,23 @@ for h = h_vec
         end
     end
 
-
-    % better levels
+% better levels
     z_min = min(real(Z(:))); 
     z_max = max(real(Z(:)));
-    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    % 1. Livelli lineari molto fitti per il centro vuoto (es. dal minimo a minimo + 0.5)
+    levels_center = linspace(z_min, z_min + 7, 30); 
+    
+    % 2. Livelli logaritmici per i bordi ripidi
+    levels_outer = logspace(real(log10(z_min + 7)), real(log10(z_max)), 70);
+    
+    % Uniamo i due set di livelli rimuovendo eventuali duplicati
+    levels = unique([levels_center, levels_outer]); 
 
     contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
     hold on;
 
-    c1 = [0.000, 0.447, 0.741]; 
+    col1 = [0.000, 0.447, 0.741]; 
     c2 = [0.850, 0.325, 0.098]; 
     c3 = [0.466, 0.674, 0.188]; 
     c4 = [0.494, 0.184, 0.556]; 
@@ -338,7 +356,7 @@ for h = h_vec
     lw = 1.5; 
     ms = 12;  
 
-    plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+    plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', col1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
     plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
     plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
     plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
@@ -353,11 +371,13 @@ for h = h_vec
     xlabel('x_1');
     ylabel('x_2');
     legend('show');
-    xlim([-2.5,1]);
-    ylim([-2.5, 0.5]);
+    xlim([-3,2]);
+    ylim([-1, 2]);
 
 
     % variable increment gradient and Hessian
+
+    
     Hessf_var_handle = @(x) findiff_Hess_16(x, h * max(abs(x), 1e-12));
     gradf_var_handle = @(x) findiff_grad_16(x, h * max(abs(x), 1e-12), 'c');
     
@@ -547,7 +567,7 @@ for h = h_vec
     %figures
     
     
-    TOP VIEW MODIFIED
+    %TOP VIEW MODIFIED
     figure;
     [X, Y] = meshgrid(linspace(-6, 2, 500), linspace(-3, 5, 500));
     Z = zeros(size(X));
@@ -559,14 +579,28 @@ for h = h_vec
     end
 
     % better levels
+
+    
+   
+% better levels
     z_min = min(real(Z(:))); 
     z_max = max(real(Z(:)));
-    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    % 1. Livelli lineari molto fitti per il centro vuoto (es. dal minimo a minimo + 0.5)
+    levels_center = linspace(z_min, z_min + 7, 30); 
+    
+    % 2. Livelli logaritmici per i bordi ripidi
+    levels_outer = logspace(real(log10(z_min + 7)), real(log10(z_max)), 70);
+    
+    % Uniamo i due set di livelli rimuovendo eventuali duplicati
+    levels = unique([levels_center, levels_outer]); 
 
     contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
     hold on;
 
-    c1 = [0.000, 0.447, 0.741]; 
+
+
+    col1 = [0.000, 0.447, 0.741]; 
     c2 = [0.850, 0.325, 0.098]; 
     c3 = [0.466, 0.674, 0.188]; 
     c4 = [0.494, 0.184, 0.556]; 
@@ -576,7 +610,7 @@ for h = h_vec
     lw = 1.5; 
     ms = 12;  
 
-    plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+    plot(xBigSeq_M{1}(1,:), xBigSeq_M{1}(2,:), '.-', 'Color', col1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
     plot(xBigSeq_M{2}(1,:), xBigSeq_M{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
     plot(xBigSeq_M{3}(1,:), xBigSeq_M{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
     plot(xBigSeq_M{4}(1,:), xBigSeq_M{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
@@ -588,8 +622,8 @@ for h = h_vec
     xlabel('x_1');
     ylabel('x_2');
     legend('show');
-    xlim([-2.5, 1]);
-    ylim([-2.5, 0.5]);
+    xlim([-3,2]);
+    ylim([-1, 2]);
 
 
 
@@ -606,15 +640,24 @@ for h = h_vec
     end
 
 
-    % better levels
+
+   % better levels
     z_min = min(real(Z(:))); 
     z_max = max(real(Z(:)));
-    levels = logspace(real(log10(z_min + 0.1)), real(log10(z_max)), 80) - 0.1; 
+
+    % 1. Livelli lineari molto fitti per il centro vuoto (es. dal minimo a minimo + 0.5)
+    levels_center = linspace(z_min, z_min + 7, 30); 
+    
+    % 2. Livelli logaritmici per i bordi ripidi
+    levels_outer = logspace(real(log10(z_min + 7)), real(log10(z_max)), 70);
+    
+    % Uniamo i due set di livelli rimuovendo eventuali duplicati
+    levels = unique([levels_center, levels_outer]); 
 
     contour(X, Y, real(Z), real(levels), 'LineColor', [0.7 0.7 0.7]);
     hold on;
 
-    c1 = [0.000, 0.447, 0.741]; 
+    col1 = [0.000, 0.447, 0.741]; 
     c2 = [0.850, 0.325, 0.098]; 
     c3 = [0.466, 0.674, 0.188]; 
     c4 = [0.494, 0.184, 0.556]; 
@@ -624,7 +667,7 @@ for h = h_vec
     lw = 1.5; 
     ms = 12;  
 
-    plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', c1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
+    plot(xBigSeq_T{1}(1,:), xBigSeq_T{1}(2,:), '.-', 'Color', col1, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 1');
     plot(xBigSeq_T{2}(1,:), xBigSeq_T{2}(2,:), '.-', 'Color', c2, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 2');
     plot(xBigSeq_T{3}(1,:), xBigSeq_T{3}(2,:), '.-', 'Color', c3, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 3');
     plot(xBigSeq_T{4}(1,:), xBigSeq_T{4}(2,:), '.-', 'Color', c4, 'LineWidth', lw, 'MarkerSize', ms, 'DisplayName', 'Start 4');
@@ -639,9 +682,8 @@ for h = h_vec
     xlabel('x_1');
     ylabel('x_2');
     legend('show');
-    xlim([-2.5,1]);
-    ylim([-2.5, 0.5]);
-
+    xlim([-3,2]);
+    ylim([-1, 2]);
 
     
 end
